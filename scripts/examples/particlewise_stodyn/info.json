@@ -1,0 +1,22 @@
+{
+    "runID": 0,
+    "dim": 3,
+    "N": 2000,
+    "box_size": [
+        100.0,
+        100.0,
+        100.0
+    ],
+    "phi": 0.6,
+    "n_save": 200,
+    "n_rec": 20,
+    "n_steps": 8000,
+    "save_mode": "concise",
+    "optimization_method": "inversepower_particlewise_stodyn",
+    "init_config": "random",
+    "alpha": 0.026,
+    "a0": 4.0,
+    "mpow": 1.0,
+    "D0": 0.02,
+    "r": 4.152830592077073
+}

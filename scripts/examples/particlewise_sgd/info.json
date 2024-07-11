@@ -1,0 +1,22 @@
+{
+    "runID": 0,
+    "dim": 3,
+    "N": 2000,
+    "box_size": [
+        100.0,
+        100.0,
+        100.0
+    ],
+    "phi": 0.6,
+    "n_save": 200,
+    "n_rec": 20,
+    "n_steps": 8000,
+    "save_mode": "concise",
+    "optimization_method": "inversepower_probabilistic_particlewise_sgd",
+    "init_config": "random",
+    "lr": 0.02,
+    "a0": 4.0,
+    "mpow": 1.0,
+    "prob": 0.75,
+    "r": 4.152830592077073
+}
