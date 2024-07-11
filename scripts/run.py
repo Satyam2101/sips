@@ -124,7 +124,8 @@ def initialize_position(input:Info):
 
 def construct_algorithm(input:Info,x0:np.array):
     boxv = input.box_size
-    optimization_method = input.optimization_method.replace("match_bro","")
+    optimization_method = input.optimization_method.replace("_match_bro","")
+    print(optimization_method)
     if input.use_clist == "on":
         if "particlewise_bro" == optimization_method:
             if input.dim == 2:
@@ -182,6 +183,8 @@ def construct_algorithm(input:Info,x0:np.array):
                 return algorithms.InversePowerNonReciprocalPairwiseStoDynCList3D(input.mpow,input.a0,input.alpha,input.D0,np.full(input.N,input.r),boxv,x0,1.0,True)
             elif input.dim == 4:
                 return algorithms.InversePowerNonReciprocalPairwiseStoDynCList4D(input.mpow,input.a0,input.alpha,input.D0,np.full(input.N,input.r),boxv,x0,1.0,True)
+        else:
+            raise ValueError(optimization_method + "is not a valid input") 
     else:
         raise NotImplementedError("non-cell list methods have not been implemented yet")
 
@@ -204,6 +207,7 @@ def construct_algorithm(input:Info,x0:np.array):
 
 #----------------------------the main code starts------------------------------------------------
 loc = sys.argv[1]     
+print("The simulation dir:" + loc)
 # get the input information
 info = Info(loc)
 # initialization
