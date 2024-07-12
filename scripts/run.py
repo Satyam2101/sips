@@ -222,7 +222,7 @@ print(algo)
 #---------------------------the simulation starts------------------------------------------
 print("--------Simulation starts--------")
 t1 = time.time()
-algo.run(n_steps = info.n_steps, n_save = info.n_save, n_rec = info.n_rec,
+algo.run(n_steps = info.n_steps + 1, n_save = info.n_save, n_rec = info.n_rec,
          starting_step = t0, cutoff = 1.0 - info.cutoff,
          output_dir = loc,save_mode = info.save_mode,
          compression = (info.compression=="on"))
