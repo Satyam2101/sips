@@ -57,7 +57,7 @@ class Info:
         if ("sgd" in self.optimization_method) and ("probabilistic" in self.optimization_method):
             if "match_bro" in input_dict["optimization_method"]:
                 self.mpow = 1.0
-                self.a0 = self.r
+                self.a0_r = 1.0
                 self.lr = -abs(self.eps/0.75) # negative lr means gradient descent
                 self.prob = 0.75 
             elif not "lr" in input_dict:   
@@ -69,23 +69,26 @@ class Info:
         if "stodyn" in input_dict["optimization_method"]:
             if "match_bro" in input_dict["optimization_method"]:
                 self.mpow = 1.0
-                self.a0 = self.r
+                self.a0_r = 1.0
                 self.alpha = -abs(self.eps/0.75)
-                self.D0 = (0.75 - 0.75*0.75)*self.alpha*2.0*self.r
+                self.D0 = (0.75 - 0.75*0.75)*np.power(self.alpha*2.0*self.r,2.0)
             elif "match_sgd" in input_dict["optimization_method"]:
-                self.D0 = (0.75 - 0.75*0.75)*self.lr*2.0*self.r
+                self.mpow = 1.0
+                self.a0_r = 1.0
+                self.alpha = -abs(self.lr/self.prob)
+                self.D0 = (self.prob - self.prob*self.prob)*np.power(self.lr*2.0*self.r,2.0)
             elif not "alpha" in input_dict:
                 raise ValueError("alpha for stodyn method is missing in the info.json")
             elif not "D0" in input_dict:
                 raise ValueError("D0 for stodyn method is missing in the info.json")
         #--------------- scale the learning rate/ kick size/ alpha to the unit of radius----
-        if "lr" in input_dict:
+        if hasattr(self,"lr"):
             self.lr = -abs(self.lr)*2.0*self.r
-        if "eps" in input_dict:
+        if hasattr(self,"eps"):
             self.eps = abs(self.eps)*2.0*self.r
-        if "alpha" in input_dict:
+        if hasattr(self,"alpha"):
             self.alpha = -abs(self.alpha)*2.0*self.r
-        if "a0_r" in input_dict:
+        if hasattr(self,"a0_r"):
             self.a0 = self.a0_r*self.r 
         #--------------- for potential based mathods--------------------
         if "inversepower" in input_dict["optimization_method"]:
@@ -218,6 +221,10 @@ algo = construct_algorithm(info,x)
 if info.zoom_rate > 0:
     algo.set_zoom_steps(starting_step = info.zoom_start,ending_step = info.zoom_end,
                         zoom_rate = info.zoom_rate)
+print("R = {}".format(info.r))
+print("eps = {}".format(info.eps))
+print("alpha = {}".format(info.alpha))
+print("D0 = {}".format(info.D0))
 print(algo)
 #---------------------------the simulation starts------------------------------------------
 print("--------Simulation starts--------")
