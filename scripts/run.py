@@ -192,20 +192,12 @@ def construct_algorithm(input:Info,x0:np.array):
         raise NotImplementedError("non-cell list methods have not been implemented yet")
 
 
-# Inverse Potential
+# Inversepower Potential
 # E(xi,xj) = a0/a*(1-dij/(ri+rj))^a, if(dij<ri+rj) where dij = sqrt((xi-xj)^2) 
 #          = 0 ,if dij>=ri+rj
 # xi and xj are the coordinates of atom i and j
 # the input for get_energy is x=[x1,y1,z1,x2,y2,z2 ...]
 # x1,y1,z1 is the coordinate for the first atom in 3D
-# return value e is the energy
-# return value g is the jacobian 
-# where dE/dxi_alpha = g[i*dim + alpha] i=0..N-1, alpha = 0..dim-1
-#pot = potentials.InversePower(a=mpow,eps=a0,boxv=boxv,radii = np.full(N,r),
-#                        ncellx_scale = None,enable_batch = True,method=Distance.PERIODIC,balance_omp=True)
-
-# set to set the number of cores for NUMBA using environment variables 
-# export NUMBA_NUM_THREADS=2
 
 
 #----------------------------the main code starts------------------------------------------------
