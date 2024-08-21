@@ -112,7 +112,16 @@ class DataLoader():
             count /= (2.0*np.pi*r*dr + 1e-8)
         density = self.info["N"]/V
         return (r/(self.info["r"]*2.0),count/density)
-    
+    def get_pbc_position(self,x):
+        if x.shape[-1] != self.info["dim"]:
+            x = np.reshape(x,(-1,self.info["dim"]))
+        for d in range(self.info["dim"]):
+            while np.any(x[:,d] < 0.0):
+                x[np.where(x[:,d] < 0.0),d] += self.info["box_size"][d]
+            while np.any(x[:,d] > self.info["box_size"][d]):
+                x[np.where(x[:,d] > self.info["box_size"][d]),d] -= self.info["box_size"][d]
+        return x
+        
     def get_pair_corr_along_axes2d(self,x,inbr,dr = None,dt = 0.1):
         x = np.reshape(x,(-1,self.info["dim"]))
         if not dr :
@@ -166,6 +175,7 @@ class DataLoader():
         # N: resolvsion in k-space
         #    the output is a N^dim array
         x = np.reshape(x,(-1,self.info["dim"]))
+        x = self.get_pbc_position(x) # position betwee 0 and L
         if N is None:
             N = 512
         if self.info["dim"] == 2:
@@ -232,6 +242,7 @@ def get_radial_structure_factor2d(kx,ky,s,n_bins=800,cut_off = 0.6):
 
 @jit(nopython=True)
 def get_radial_structure_factor3d(kx,ky,kz,s,n_bins=100,cut_off = 0.6):
+    s[0,0,0] = 0.0
     k_max = np.sqrt(kx[-1]**2 + ky[-1]**2 + kz[-1]**2)*cut_off 
     s_k = np.zeros(n_bins)
     dV = (kx[2]-kx[1])*(ky[2]-ky[1])*(kz[2]-kz[1])
