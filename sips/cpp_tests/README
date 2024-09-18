@@ -1,0 +1,11 @@
+build the tests
+  cd source
+  mkdir build&& cd build
+  cmake ..
+  cmake --build .
+run the tests
+  cd source/build
+  ./test_main
+
+run test with filter
+./test_main --gtest_filter=ReciprocityTest.BRO

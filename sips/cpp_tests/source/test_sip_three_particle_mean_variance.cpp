@@ -155,9 +155,9 @@ TEST_F(SIPMeanVarianceTestThreeParticles, ReciprocalBRO){
     EXPECT_LT(rerr1,tol) << "atom 1:relative err for mean_vec = " <<rerr1 ;
     EXPECT_LT(rerr2,tol) << "atom 1:relative err for cov_mat = " <<rerr2 ;
     //atom 2
-    get_mean_cov(disp_vec1,mean_vec,cov_mat);
-    rerr1 = dist_vec(mean_vec,ans_mean1)/dist_vec(ans_mean1,zero_vec);
-    rerr2 = dist_mat(cov_mat,ans_cov1,ndim)/dist_mat(ans_cov1,zero_mat,ndim);
+    get_mean_cov(disp_vec2,mean_vec,cov_mat);
+    rerr1 = dist_vec(mean_vec,ans_mean2)/dist_vec(ans_mean2,zero_vec);
+    rerr2 = dist_mat(cov_mat,ans_cov2,ndim)/dist_mat(ans_cov2,zero_mat,ndim);
     EXPECT_LT(rerr1,tol) << "atom 2:relative err for mean_vec = " <<rerr1 ;
     EXPECT_LT(rerr2,tol) << "atom 2:relative err for cov_mat = " <<rerr2 ;
 }
@@ -219,9 +219,9 @@ TEST_F(SIPMeanVarianceTestThreeParticles, NonReciprocalBRO){
     EXPECT_LT(rerr1,tol) << "atom 1:relative err for mean_vec = " <<rerr1 ;
     EXPECT_LT(rerr2,tol) << "atom 1:relative err for cov_mat = " <<rerr2 ;
     //atom 2
-    get_mean_cov(disp_vec1,mean_vec,cov_mat);
-    rerr1 = dist_vec(mean_vec,ans_mean1)/dist_vec(ans_mean1,zero_vec);
-    rerr2 = dist_mat(cov_mat,ans_cov1,ndim)/dist_mat(ans_cov1,zero_mat,ndim);
+    get_mean_cov(disp_vec2,mean_vec,cov_mat);
+    rerr1 = dist_vec(mean_vec,ans_mean2)/dist_vec(ans_mean2,zero_vec);
+    rerr2 = dist_mat(cov_mat,ans_cov2,ndim)/dist_mat(ans_cov2,zero_mat,ndim);
     EXPECT_LT(rerr1,tol) << "atom 2:relative err for mean_vec = " <<rerr1 ;
     EXPECT_LT(rerr2,tol) << "atom 2:relative err for cov_mat = " <<rerr2 ;
 }
