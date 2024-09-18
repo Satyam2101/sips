@@ -53,18 +53,25 @@ class DataLoader():
             max_iter = max(iters)
             for file in os.listdir(self.dir_name):
                 if file.endswith(str(max_iter)+".zip"):
-                    self.data.append(self.read_zipped_json(os.path.join(dir_name,file)))
-                elif file.endswith(str(max_iter)+".zip"):
-                    self.data.append(self.read_zipped_json(os.path.join(dir_name,file)))  
+                    self.data.append(self.read_zipped_json(os.path.join(dir_name,file))) 
         elif mode == "range":
             iters = []
             for file in os.listdir(self.dir_name):
                 if file.endswith(".zip") and file.find('iter')>0:
                     m = re.search(".+iter(\w+)[.].+",file).group(1)
-                    iter = int(re.search(".+iter(\w+)[.].+",file).group(1))
-                    if iter>= rng[0] and iter <= rng[1]:
+                    _iter = int(re.search(".+iter(\w+)[.].+",file).group(1))
+                    iters.append(_iter)
+            iters.sort()
+            rng[0] = iters[rng[0]]
+            rng[1] = iters[rng[1]]
+            for file in os.listdir(self.dir_name):
+                if file.endswith(".zip") and file.find('iter')>0:
+                    m = re.search(".+iter(\w+)[.].+",file).group(1)
+                    _iter = int(re.search(".+iter(\w+)[.].+",file).group(1))   
+                    if _iter>= rng[0] and _iter <= rng[1]:
                         self.data.append(self.read_zipped_json(os.path.join(dir_name,file)))
             self.data = sorted(self.data,key=lambda data:data['iter'])
+        
                         
     def read_data_by_index(self,idx):
          file_name = "data_iter{}.json".format(idx*self.info['n_iter'])
@@ -183,7 +190,7 @@ class DataLoader():
             x2 = (x[:,1]/self.info["box_size"][1] - 0.5)*2.0*np.pi
             c = np.ones(self.info["N"]).astype(np.complex128)
             f = finufft.nufft2d1(x1, x2, c, (N, N),modeord=0)
-            s = np.abs(f*np.conjugate(f))/N
+            s = np.abs(f*np.conjugate(f))/self.info["N"]
             kx = np.fft.fftshift(np.fft.fftfreq(N)*N*2*np.pi/self.info["box_size"][0])
             ky = np.fft.fftshift(np.fft.fftfreq(N)*N*2*np.pi/self.info["box_size"][1])
             return (kx,ky,s)
@@ -193,7 +200,7 @@ class DataLoader():
             x3 = (x[:,2]/self.info["box_size"][2] - 0.5)*2.0*np.pi
             c = np.ones(self.info["N"]).astype(np.complex128)
             f = finufft.nufft3d1(x1, x2, x3, c, (N, N, N),modeord=0)
-            s = np.abs(f*np.conjugate(f))/N
+            s = np.abs(f*np.conjugate(f))/self.info["N"]
             kx = np.fft.fftshift(np.fft.fftfreq(N)*N*2*np.pi/self.info["box_size"][0])
             ky = np.fft.fftshift(np.fft.fftfreq(N)*N*2*np.pi/self.info["box_size"][1])
             kz = np.fft.fftshift(np.fft.fftfreq(N)*N*2*np.pi/self.info["box_size"][2])
@@ -225,7 +232,7 @@ def get_nearast_distances(self,x,box_size,n_nbrs=1,pbc = True):
     return ind,dist
 
 @jit(nopython=True)
-def get_radial_structure_factor2d(kx,ky,s,n_bins=800,cut_off = 0.6):
+def get_radial_structure_factor2d(kx,ky,s,n_bins=800,cut_off = 0.7):
     k_max = np.sqrt(kx[-1]**2 + ky[-1]**2)*cut_off 
     s_k = np.zeros(n_bins)
     dA = (kx[2]-kx[1])*(ky[2]-ky[1])
@@ -240,8 +247,24 @@ def get_radial_structure_factor2d(kx,ky,s,n_bins=800,cut_off = 0.6):
     s_k /= 2.0*np.pi*k*delta_k
     return k,s_k
 
+def get_radial_profile(data, center=None,rm_npts=1):
+    ndim = len(data.shape)
+    R = int(data.shape[0]/2)
+    if center is None:
+        center = np.array(data.shape)/2
+    for i in range(ndim):
+        center = np.expand_dims(center, axis=-1)
+    idx = np.indices((data.shape))
+    r = np.sqrt(np.sum((idx - center)**2,axis=0))
+    r = r.astype(int)
+    r = np.where(r <= R, r, R+1)
+    tbin = np.bincount(r.ravel(),data.ravel())
+    nr = np.bincount(r.ravel())
+    radialprofile = tbin/nr
+    return np.unique(r).ravel()[rm_npts:-1], radialprofile[rm_npts:-1]
+
 @jit(nopython=True)
-def get_radial_structure_factor3d(kx,ky,kz,s,n_bins=100,cut_off = 0.6):
+def get_radial_structure_factor3d(kx,ky,kz,s,n_bins=100,cut_off = 0.7):
     s[0,0,0] = 0.0
     k_max = np.sqrt(kx[-1]**2 + ky[-1]**2 + kz[-1]**2)*cut_off 
     s_k = np.zeros(n_bins)
