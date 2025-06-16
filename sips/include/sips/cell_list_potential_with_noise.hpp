@@ -79,7 +79,21 @@ public:
         m_noises[0] = new noise_type(0.0,1.0,noise_scale);
         #endif
     }
+    void set_grad_scale_factor(double f){
+        this->m_grad_scale_factor = f;
+    }
 
+    double get_grad_scale_factor(){
+        return this->m_grad_scale_factor;
+    }
+
+    void set_noise_scale(double n){
+        this->m_noise_scale = n;
+    }
+
+    double get_noise_scale(){
+        return this->m_noise_scale;
+    }
     void reset_data(const std::vector<double> * coords, std::vector<double> * gradient) {
         m_coords = coords;
         #ifdef _OPENMP
@@ -176,6 +190,22 @@ public:
           m_psfAcc(interaction, dist, radii, grad_scale_factor, noise_scale)
             {
          }
+    
+    void set_grad_scale_factor(double f){
+        m_psfAcc.set_grad_scale_factor(f);
+    }
+    
+    double get_grad_scale_factor(){
+        return m_psfAcc.get_grad_scale_factor();
+    }
+    
+    void set_noise_scale(double n){
+        m_psfAcc.set_noise_scale(n);
+    }
+    
+    double get_noise_scale(){
+        return m_psfAcc.get_noise_scale();
+    }
 
     virtual double get_stochastic_force(std::vector<double> const & coords, std::vector<double> & grad)
     {

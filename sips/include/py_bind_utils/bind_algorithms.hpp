@@ -46,7 +46,7 @@ void bind_inversepower_sgd(py::module& m,std::string class_name){
                   py::arg("box_size"),py::arg("x0"),
                   py::arg("ncellx_scale")=1.0,py::arg("balance_omp")=true)
     .def("run",&T::run,"run the algorithm",
-         py::arg("n_steps"),py::arg("n_save"),py::arg("n_rec"),
+         py::arg("n_steps"),py::arg("n_save"),py::arg("n_rec"),py::arg("n_anneal"),
          py::arg("starting_step")=0,
          py::arg("cutoff")=1.0,
          py::arg("output_dir") = "./",
@@ -71,7 +71,7 @@ void bind_inversepower_sd(py::module& m,std::string class_name){
                   py::arg("box_size"),py::arg("x0"),
                   py::arg("ncellx_scale")=1.0,py::arg("balance_omp")=true)
     .def("run",&T::run,"run the algorithm",
-         py::arg("n_steps"),py::arg("n_save"),py::arg("n_rec"),
+         py::arg("n_steps"),py::arg("n_save"),py::arg("n_rec"),py::arg("n_anneal"),
          py::arg("starting_step")=0,
          py::arg("cutoff")=1.0,
          py::arg("output_dir") = "./",

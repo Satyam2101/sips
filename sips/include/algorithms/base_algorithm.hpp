@@ -55,13 +55,6 @@ public:
         #endif  
     }
 
-    virtual void run(size_t n_steps, size_t n_save, size_t n_rec, 
-                    size_t current_step = 0, double cutoff_factor = 1.0,
-                    std::string output_dir='./',
-                    std::string save_mode = 'concise',
-                    bool compression = false){
-        throw std::runtime_error("need to implement/override this method");
-    }
     virtual void get_neighbors(){
         m_potential->get_neighbors(this->m_coords,this->m_nbr,this->m_nbr_dists,m_cutoff_factor);
     }
@@ -294,12 +287,17 @@ public:
         this->m_json["energy_flucuation"] = avg_energy_flucuation();
         return base_algorithm<T_pot>::update_stat_json();
     }
+    
+    // a new virtual method, where all the derived class must implement
+    virtual void anneal(size_t n_steps){
+        throw std::runtime_error("need to implement/override this method");
+    }
 
     void write_json_to_file(std::string dir, std::string file){
         base_algorithm<T_pot>::write_json_to_file(dir,file);
     }
-
-    virtual void run(size_t n_steps, size_t n_save, size_t n_rec, 
+    
+    virtual void run(size_t n_steps, size_t n_save, size_t n_rec, size_ti n_anneal = 0,
                     size_t current_step = 0, double cutoff_factor = 1.0,
                     std::string output_dir='./', 
                     std::string save_mode = 'concise',
@@ -372,6 +370,18 @@ public:
             }
             one_step();
             this->m_current_step ++;
+        }
+
+        if (n_anneal > 0){
+            anneal(n_anneal);
+            if (compression){
+                write_json_to_file(output_dir,"data.json");
+                compress_file(output_dir,"annealed" + ".zip","data.json");
+                rm_file(output_dir,"data.json");
+            }
+            else{
+                write_json_to_file(output_dir,"annealed" +".json");
+            }
         }
         this->m_json.clear();
         update_stat_json();

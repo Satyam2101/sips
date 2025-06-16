@@ -184,6 +184,21 @@ public:
         PairwiseProbabilisticCellListPotential<ha::InversePowerInteraction, ha::periodic_distance<ndim> >::get_batch_energy_gradient(coords,disp);
 
     }
+    void set_lr(double f){
+        this->set_grad_scale_factor(f);
+    }
+
+    double get_lr(){
+        return this->get_grad_scale_factor();
+    }
+
+    void set_prob(double p){
+        PairwiseProbabilisticCellListPotential<ha::InversePowerInteraction, ha::periodic_distance<ndim> >::set_prob(p);
+    }
+
+    double get_prob(){
+        return PairwiseProbabilisticCellListPotential<ha::InversePowerInteraction, ha::periodic_distance<ndim> >::get_prob(p);
+    }
 
 };
 
@@ -221,7 +236,21 @@ public:
         m_batch_particles.resize(1);
         #endif  
     }       
-    
+    void set_lr(double f){
+        m_lr = f;
+    }
+
+    double get_lr(){
+        return m_lr;
+    }
+
+    void set_prob(double p){
+        m_prob = p;
+    }
+
+    double get_prob(){
+        return m_prob;
+    }
     virtual double get_batch_energy_gradient(std::vector<double> const & coords, std::vector<double> & grad){
         // update the displacement
         CellListPotential<ha::InversePowerInteraction, ha::periodic_distance<ndim> >::get_energy_gradient(coords,grad);
@@ -323,6 +352,23 @@ public:
     virtual void get_displacement(std::vector<double> const & coords, std::vector<double> & disp){
         PairwiseNoisyCellListPotential<ha::InversePowerInteraction, ha::periodic_distance<ndim>, ReciprocalGaussianNoise>::get_stochastic_force(coords,disp);
     }
+    
+    void set_alhpa(double a){
+        this->m_psfAcc.set_grad_scale_factor(f);
+    }
+
+    double get_alpha(){
+        return this->m_psfAcc.get_grad_scale_factor(f);
+    }
+
+    void set_D0(double D0){
+        this->m_psfAcc.set_noise_scale(sqrt(D0));
+    }
+
+    double get_D0(){
+        double sqrt_D = this->m_psfAcc.get_noise_scale();
+        return sqrt_D*sqrt_D;
+    }
 
 };
 
@@ -347,6 +393,24 @@ public:
         m_boxv(boxv),
         m_ndim(ndim)
     {}
+    
+    void set_alhpa(double a){
+        this->m_psfAcc.set_grad_scale_factor(f);
+    }
+
+    double get_alpha(){
+        return this->m_psfAcc.get_grad_scale_factor(f);
+    }
+
+    void set_D0(double D0){
+        this->m_psfAcc.set_noise_scale(sqrt(D0));
+    }
+
+    double get_D0(){
+        double sqrt_D = this->m_psfAcc.get_noise_scale();
+        return sqrt_D*sqrt_D;
+    }
+
     virtual void get_displacement(std::vector<double> const & coords, std::vector<double> & disp){
          PairwiseNoisyCellListPotential<ha::InversePowerInteraction, ha::periodic_distance<ndim>, NonReciprocalGaussianNoise>::get_stochastic_force(coords,disp);
 
@@ -386,6 +450,28 @@ public:
         m_rand_generators.push_back(ptr);
         #endif  
     }
+
+    void set_alhpa(double a){
+        m_alpha = a;
+    }
+
+    double get_alpha(){
+        return m_alpha;
+    }
+
+    void set_D0(double D0){
+        m_D0 = D0;
+    }
+
+    double get_D0(){
+        return m_D0;
+    }
+
+    virtual void get_displacement(std::vector<double> const & coords, std::vector<double> & disp){
+         PairwiseNoisyCellListPotential<ha::InversePowerInteraction, ha::periodic_distance<ndim>, NonReciprocalGaussianNoise>::get_stochastic_force(coords,disp);
+
+    }
+
     virtual void get_stochastic_force(std::vector<double> const & coords, std::vector<double> & grad){
         CellListPotential<ha::InversePowerInteraction, ha::periodic_distance<ndim> >::get_energy_gradient(coords,grad);
         size_t natoms = coords.size()/ndim;
