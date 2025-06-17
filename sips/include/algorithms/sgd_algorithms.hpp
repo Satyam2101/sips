@@ -15,7 +15,7 @@ public:
                     std::make_shared<ha::InversePowerPeriodicProbabilisticPairBatchCellLists<ndim> >(pow,eps,lr,prob,radii,boxv,ncellx_scale,balance_omp),
                      boxv,init_coords)
                 {}
-    virtual anneal(size_t n_steps){
+    virtual void anneal(size_t n_steps){
         // annealing process: relax the system with zero noise and small learning rate
         // for n_steps
         double lr = this->m_potential->get_lr();
@@ -23,7 +23,7 @@ public:
         this->m_potential->set_lr(0.1*lr);
         this->m_potential->set_prob(1.0); // prob=1.0 --> noiseless
         for (size_t i=0;i<n_steps;i++){
-            one_step();
+            this->one_step();
         }
         // recover the state before annealing
         this->m_potential->set_lr(lr);
@@ -42,7 +42,7 @@ public:
                     std::make_shared<ha::InversePowerPeriodicProbabilisticParticleBatchCellLists<ndim> >(pow,eps,lr,prob,radii,boxv,ncellx_scale,balance_omp),
                      boxv,init_coords)
                 {}
-    virtual anneal(size_t n_steps){
+    virtual void anneal(size_t n_steps){
         // annealing process: relax the system with zero noise and small learning rate
         // for n_steps
         double lr = this->m_potential->get_lr();
@@ -50,7 +50,7 @@ public:
         this->m_potential->set_lr(0.1*lr);
         this->m_potential->set_prob(1.0); // prob=1.0 --> noiseless
         for (size_t i=0;i<n_steps;i++){
-            one_step();
+            this->one_step();
         }
         // recover the state before annealing
         this->m_potential->set_lr(lr);

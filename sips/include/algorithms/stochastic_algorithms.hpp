@@ -32,15 +32,15 @@ public:
                     std::make_shared<ha::InversePowerPeriodicNonReciprocalPairwiseNoiseCellLists<ndim> >(pow,eps,alpha,D0,radii,boxv,ncellx_scale,balance_omp),
                      boxv,init_coords)
                 {}
-    virtual anneal(size_t n_steps){
+    virtual void anneal(size_t n_steps){
         // annealing process: relax the system with zero noise and small learning rate
         // for n_steps
         double alpha = this->m_potential->get_alpha();
         double D0 = this->m_potential->get_D0();
-        this->m_potential->set_alpha(0.1*lr);
+        this->m_potential->set_alpha(0.1*alpha);
         this->m_potential->set_D0(0.0); // D0=0.0 --> noiseless
         for (size_t i=0;i<n_steps;i++){
-            one_step();
+            this->one_step();
         }
         // recover the state before annealing
         this->m_potential->set_alpha(alpha);
@@ -59,7 +59,7 @@ public:
                     std::make_shared<ha::InversePowerPeriodicParticlewiseNoiseCellLists<ndim> >(pow,eps,alpha,D0,radii,boxv,ncellx_scale,balance_omp),
                      boxv,init_coords)
                 {}
-    virtual anneal(size_t n_steps){
+    virtual void anneal(size_t n_steps){
         // annealing process: relax the system with zero noise and small learning rate
         // for n_steps
         double alpha = this->m_potential->get_alpha();
@@ -67,7 +67,7 @@ public:
         this->m_potential->set_alpha(0.1*alpha);
         this->m_potential->set_D0(0.0); // D0=0.0 --> noiseless
         for (size_t i=0;i<n_steps;i++){
-            one_step();
+            this->one_step();
         }
         // recover the state before annealing
         this->m_potential->set_alpha(alpha);

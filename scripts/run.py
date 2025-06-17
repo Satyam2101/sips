@@ -213,18 +213,28 @@ algo = construct_algorithm(info,x)
 if info.zoom_rate > 0:
     algo.set_zoom_steps(starting_step = info.zoom_start,ending_step = info.zoom_end,
                         zoom_rate = info.zoom_rate)
-print("R = {}".format(info.r))
-print("eps = {}".format(info.eps))
-print("alpha = {}".format(info.alpha))
-print("D0 = {}".format(info.D0))
 print(algo)
 #---------------------------the simulation starts------------------------------------------
 print("--------Simulation starts--------")
 t1 = time.time()
-algo.run(n_steps = info.n_steps + 1, n_save = info.n_save, n_rec = info.n_rec,
+potential_based_methods = ["inversepower_probabilistic_particlewise_sgd",
+                   "inversepower_probabilistic_pairwise_sgd",
+                   "inversepower_particlewise_stodyn",
+                   "inversepower_reciprocal_pairwise_stodyn",
+                   "inversepower_nonreciprocal_pairwise_stody"]
+if info.optimization_method in potential_based_methods:
+    # annealing if it is a potential based method
+    n_anneal = info.n_anneal if hasattr(info,"n_anneal") else 0
+    algo.run(n_steps = info.n_steps + 1, n_save = info.n_save, n_rec = info.n_rec,n_anneal = n_anneal,
          starting_step = t0, cutoff = 1.0 - info.cutoff,
          output_dir = loc,save_mode = info.save_mode,
          compression = (info.compression=="on"))
+else:
+    algo.run(n_steps = info.n_steps + 1, n_save = info.n_save, n_rec = info.n_rec,
+         starting_step = t0, cutoff = 1.0 - info.cutoff,
+         output_dir = loc,save_mode = info.save_mode,
+         compression = (info.compression=="on"))
+    
 t2 = time.time()
 print("--------Simulation ends--------")
 print("This simulation took " + str(t2-t1) + " secs")

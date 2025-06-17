@@ -297,7 +297,7 @@ public:
         base_algorithm<T_pot>::write_json_to_file(dir,file);
     }
     
-    virtual void run(size_t n_steps, size_t n_save, size_t n_rec, size_ti n_anneal = 0,
+    virtual void run(size_t n_steps, size_t n_save, size_t n_rec, size_t n_anneal = 0,
                     size_t current_step = 0, double cutoff_factor = 1.0,
                     std::string output_dir='./', 
                     std::string save_mode = 'concise',
@@ -374,13 +374,15 @@ public:
 
         if (n_anneal > 0){
             anneal(n_anneal);
+            this->m_json.clear();
+            update_data_json(save_mode);
             if (compression){
                 write_json_to_file(output_dir,"data.json");
-                compress_file(output_dir,"annealed" + ".zip","data.json");
+                compress_file(output_dir,"annealed.zip","data.json");
                 rm_file(output_dir,"data.json");
             }
             else{
-                write_json_to_file(output_dir,"annealed" +".json");
+                write_json_to_file(output_dir,"annealed.json");
             }
         }
         this->m_json.clear();
@@ -388,7 +390,7 @@ public:
         write_json_to_file(output_dir,"stat_data.json");
     }
     
-    double avg_energy_flucuation(double sigma = 0.03,size_t n_repeat = 4000){
+    double avg_energy_flucuation(double sigma = 0.01,size_t n_repeat = 4000){
             double delta = 0.0;
             sigma *= (this->m_potential)->get_average_radius();
             GaussianNoise noise(0.0,1.0,sigma);

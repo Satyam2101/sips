@@ -95,7 +95,7 @@ public:
     }
 
     double get_prob(){
-        return this->prob;
+        return this->m_prob;
     }
 
     void reset_data(const std::vector<double> * coords, std::vector<double> * gradient) {
@@ -201,7 +201,7 @@ public:
     }
     
     void set_prob(double p){
-        this->m_ppegAcc.set_prob(p)
+        this->m_ppegAcc.set_prob(p);
         m_prob = p;
     }
     

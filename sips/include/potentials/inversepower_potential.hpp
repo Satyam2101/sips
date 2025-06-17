@@ -197,7 +197,7 @@ public:
     }
 
     double get_prob(){
-        return PairwiseProbabilisticCellListPotential<ha::InversePowerInteraction, ha::periodic_distance<ndim> >::get_prob(p);
+        return PairwiseProbabilisticCellListPotential<ha::InversePowerInteraction, ha::periodic_distance<ndim> >::get_prob();
     }
 
 };
@@ -353,12 +353,12 @@ public:
         PairwiseNoisyCellListPotential<ha::InversePowerInteraction, ha::periodic_distance<ndim>, ReciprocalGaussianNoise>::get_stochastic_force(coords,disp);
     }
     
-    void set_alhpa(double a){
-        this->m_psfAcc.set_grad_scale_factor(f);
+    void set_alpha(double a){
+        this->m_psfAcc.set_grad_scale_factor(a);
     }
 
     double get_alpha(){
-        return this->m_psfAcc.get_grad_scale_factor(f);
+        return this->m_psfAcc.get_grad_scale_factor();
     }
 
     void set_D0(double D0){
@@ -394,12 +394,12 @@ public:
         m_ndim(ndim)
     {}
     
-    void set_alhpa(double a){
-        this->m_psfAcc.set_grad_scale_factor(f);
+    void set_alpha(double a){
+        this->m_psfAcc.set_grad_scale_factor(a);
     }
 
     double get_alpha(){
-        return this->m_psfAcc.get_grad_scale_factor(f);
+        return this->m_psfAcc.get_grad_scale_factor();
     }
 
     void set_D0(double D0){
@@ -451,7 +451,7 @@ public:
         #endif  
     }
 
-    void set_alhpa(double a){
+    void set_alpha(double a){
         m_alpha = a;
     }
 
@@ -465,11 +465,6 @@ public:
 
     double get_D0(){
         return m_D0;
-    }
-
-    virtual void get_displacement(std::vector<double> const & coords, std::vector<double> & disp){
-         PairwiseNoisyCellListPotential<ha::InversePowerInteraction, ha::periodic_distance<ndim>, NonReciprocalGaussianNoise>::get_stochastic_force(coords,disp);
-
     }
 
     virtual void get_stochastic_force(std::vector<double> const & coords, std::vector<double> & grad){
