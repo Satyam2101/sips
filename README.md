@@ -1,3 +1,5 @@
+This codebase is derived from https://github.com/guanming-zhang/sips, created by Guanming Zhang. The original license and copyright notices have been preserved.
+This version contains modifications and is maintained separately.
 
 ░██████╗██╗██████╗░░██████╗
 ██╔════╝██║██╔══██╗██╔════╝
