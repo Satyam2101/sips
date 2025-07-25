@@ -64,7 +64,7 @@ folders
     stocastic_algotithms.hpp
         1) particlewise stochastic dynamics
         2) pairwise stochastic dynamics
-        3) correlated pairwise stochastic dynamics
+        3) correlated pairwise stochastic dynamics with thermal noise
 ----hyperalg:
         hyperalg classes
 ----sips:
